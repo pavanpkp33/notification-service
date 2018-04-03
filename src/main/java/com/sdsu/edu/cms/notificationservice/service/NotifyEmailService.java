@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,15 +22,25 @@ public class NotifyEmailService implements INotify {
 
     @Override
     public boolean notifyTarget(Notify notification) {
-        // todo : create a new notifcation table and update values accordingly.
+        // todo : create a new notifcation table and update values accordingly. Consider creating a thread.
+        if(notification.isIs_broadcast()){
+            /*
+                If it is a broadcast message, check for conference id, get all the email from DB
+                Store it in DB as receiver : broadcast.
+             */
+        }else{
+            /*
+                Send a normal BCC email and store receiver as paper#
+             */
+        }
 
         UUID uuid = UUID.randomUUID();
         String[] recipients = notification.getReceiver().stream().toArray(String[]::new);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setBcc(recipients);
         message.setSubject(notification.getSubject());
-        String msg = (notification.getEmailMessage().isEmpty() || notification.getEmailMessage() == null) ?
-                notification.getMessage() : notification.getEmailMessage();
+        String msg = (notification.getEmail_message().isEmpty() || notification.getEmail_message() == null) ?
+                notification.getMessage() : notification.getEmail_message();
         message.setText(msg);
         try {
             javaMailSender.send(message);

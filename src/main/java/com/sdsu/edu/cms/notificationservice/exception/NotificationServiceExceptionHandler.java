@@ -29,6 +29,13 @@ public class NotificationServiceExceptionHandler extends ResponseEntityException
         return new ResponseEntity(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(NotificationMethodNotSupported.class)
+    public final ResponseEntity<Object> handleNotificationNotSupportedError(Exception ex, WebRequest request) {
+
+        apiError = new ApiError(Constants.BAD_REQUEST,ex.getMessage()+" method is currently not supported.", request.getDescription(false));
+        return new ResponseEntity(apiError, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(SQLException.class)
     public final ResponseEntity<Object> handleSQLException(SQLException ex, WebRequest request) {
         apiError = new ApiError(Constants.INTERNAL_SERVER_ERROR,ex.getMessage(), request.getDescription(false));
