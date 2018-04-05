@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.mail.MethodNotSupportedException;
 import javax.mail.SendFailedException;
 
+import java.util.Arrays;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -34,6 +36,6 @@ public class NotifyController {
         }));
         notifyService.sendNotifications(payLoad);
 
-        return null;
+        return new ServiceResponse(Arrays.asList(true), "Client notified successfully.");
     }
 }
