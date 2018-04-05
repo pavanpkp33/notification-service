@@ -1,12 +1,14 @@
 package com.sdsu.edu.cms.notificationservice.service;
 
 import com.sdsu.edu.cms.common.models.notification.Notify;
+import com.sdsu.edu.cms.common.models.notification.NotifyDBModel;
 import com.sdsu.edu.cms.notificationservice.exception.NotificationTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -23,18 +25,32 @@ public class NotifyEmailService implements INotify {
     @Override
     public boolean notifyTarget(Notify notification) {
         // todo : create a new notifcation table and update values accordingly. Consider creating a thread.
-        if(notification.isIs_broadcast()){
+        UUID uuid = UUID.randomUUID();
+        if(notification.getIs_broadcast().equals("Y")){
             /*
                 If it is a broadcast message, check for conference id, get all the email from DB
                 Store it in DB as receiver : broadcast.
              */
+            sendEmail(notification, uuid);
+
         }else{
             /*
                 Send a normal BCC email and store receiver as paper#
              */
+            sendEmail(notification, uuid);
         }
 
-        UUID uuid = UUID.randomUUID();
+
+        return true;
+    }
+
+    @Async
+    public void updateNotifications(NotifyDBModel payLoad){
+
+    }
+
+    @Async
+    public void sendEmail(Notify notification, UUID uuid){
         String[] recipients = notification.getReceiver().stream().toArray(String[]::new);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setBcc(recipients);
@@ -51,7 +67,6 @@ public class NotifyEmailService implements INotify {
             throw new NotificationTransportException(error);
 
         }
-        return true;
     }
 
 }
