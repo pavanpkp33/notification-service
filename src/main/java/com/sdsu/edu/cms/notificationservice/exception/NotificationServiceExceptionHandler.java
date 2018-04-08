@@ -36,6 +36,12 @@ public class NotificationServiceExceptionHandler extends ResponseEntityException
         return new ResponseEntity(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public final ResponseEntity<Object> handleNotificationNotFoundError(Exception ex, WebRequest request) {
+
+        apiError = new ApiError("not_found","Notification with ID "+ex.getMessage()+" not found", request.getDescription(false));
+        return new ResponseEntity(apiError, HttpStatus.BAD_REQUEST);
+    }
     @ExceptionHandler(SQLException.class)
     public final ResponseEntity<Object> handleSQLException(SQLException ex, WebRequest request) {
         apiError = new ApiError(Constants.INTERNAL_SERVER_ERROR,ex.getMessage(), request.getDescription(false));
