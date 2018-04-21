@@ -25,9 +25,9 @@ public class NotificationController {
     }
 
 
-    @GetMapping("/notifications/conferences/{confId}/users/{userId}")
-    public ServiceResponse getUserNotificationsByConference(@PathVariable String userId, @PathVariable String confId){
-        return notificationService.getNotifications(confId, userId);
+    @PostMapping("/notifications/conferences/{confId}/users")
+    public ServiceResponse getUserNotificationsByConference(@RequestBody Map<String, String> email, @PathVariable String confId){
+        return notificationService.getNotifications(confId, email.get("email"));
 
     }
 
