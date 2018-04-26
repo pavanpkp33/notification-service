@@ -18,6 +18,7 @@ import javax.mail.MethodNotSupportedException;
 import javax.mail.SendFailedException;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -31,6 +32,7 @@ public class NotifyController {
 
     @PostMapping("/notify")
     public ServiceResponse notify(@RequestBody Notify payLoad){
+        payLoad.setCreated_on(new Date());
         payLoad.getMethod().forEach((type ->{
             if(!Util.getSupportedMethods().contains(type)) throw new NotificationMethodNotSupported(type);
         }));
